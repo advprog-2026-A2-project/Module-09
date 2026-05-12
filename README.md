@@ -1,5 +1,50 @@
 # Module-09
 
+
+### 1. Current Architecture Diagrams
+
+**Context Diagram**
+```mermaid
+C4Context
+  title System Context Diagram - Current Architecture
+  Person(student, "Student", "Pengguna aplikasi E-Learning")
+  System(platform, "E-Learning Platform", "Sistem Monolithic untuk Auth, Bacaan, Kuis, dan Forum")
+  
+  Rel(student, platform, "Menggunakan", "HTTPS")
+```
+
+**Container Diagram**
+```mermaid
+C4Container
+  title Container Diagram - Current Architecture (Monolith)
+  Person(student, "Student", "Pengguna E-Learning")
+  System_Boundary(c1, "E-Learning Platform") {
+      Container(web_app, "Web Application", "Java Spring Boot / Django", "Menangani seluruh logika bisnis: Auth, Bacaan, Kuis, Forum dalam satu aplikasi")
+      ContainerDb(db, "Shared Database", "PostgreSQL", "Single database untuk menyimpan semua data modul")
+  }
+  
+  Rel(student, web_app, "Mengakses sistem", "HTTPS")
+  Rel(web_app, db, "Membaca & Menyimpan data", "JDBC/ORM")
+```
+
+**Deployment Diagram**
+```mermaid
+C4Deployment
+  title Deployment Diagram - Current Architecture
+  Deployment_Node(client, "User Device", "Browser") {
+      Container(ui, "Web UI", "HTML/CSS/JS", "Antarmuka pengguna")
+  }
+  Deployment_Node(server, "App Server", "Ubuntu/VM") {
+      Container(app, "Monolithic Application", "Java/Python", "Menjalankan semua modul")
+  }
+  Deployment_Node(db_server, "Database Server", "Ubuntu/VM") {
+      ContainerDb(db, "PostgreSQL", "Relational Database", "H2/Postgres Single Instance")
+  }
+  
+  Rel(ui, app, "Request API", "HTTPS")
+  Rel(app, db, "Query Data", "TCP/IP")
+```
+
 1. The current architecture of the group: Monolithic
 2. The future architecture of the group : Microservice
 3.  Explanation of risk storming of the group:
