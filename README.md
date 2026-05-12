@@ -45,6 +45,50 @@ C4Deployment
   Rel(app, db, "Query Data", "TCP/IP")
 ```
 
+### 2. Future Architecture Diagrams (Microservices)
+
+**Future Context Diagram**
+```mermaid
+C4Context
+  title System Context Diagram - Future Architecture
+  Person(student, "Student", "Pengguna aplikasi E-Learning")
+  System(platform, "E-Learning Microservices", "Sistem terdistribusi dan scalable")
+  
+  Rel(student, platform, "Mengakses", "HTTPS")
+```
+
+**Future Container Diagram (Sistem Baru)**
+```mermaid
+C4Container
+  title Container Diagram - Future Architecture (Microservices)
+  Person(student, "Student", "Pengguna E-Learning")
+  
+  System_Boundary(c1, "E-Learning Microservices Platform") {
+      Container(gateway, "API Gateway", "Nginx / Spring Cloud", "Routing request ke service yang tepat")
+      
+      Container(auth_svc, "Auth Service", "Spring Boot", "Menangani login & JWT")
+      Container(bacaan_svc, "Bacaan Service", "Spring Boot", "Menangani materi bacaan")
+      Container(kuis_svc, "Kuis Service", "Spring Boot", "Menangani logika kuis")
+      Container(forum_svc, "Forum Service", "Spring Boot", "Menangani thread & komentar")
+      
+      ContainerDb(db_auth, "Auth DB", "PostgreSQL", "Database user & kredensial")
+      ContainerDb(db_bacaan, "Bacaan DB", "PostgreSQL", "Database materi")
+      ContainerDb(db_kuis, "Kuis DB", "PostgreSQL", "Database soal kuis")
+      ContainerDb(db_forum, "Forum DB", "MongoDB/PostgreSQL", "Database diskusi")
+  }
+  
+  Rel(student, gateway, "Request API", "HTTPS")
+  Rel(gateway, auth_svc, "Route to", "REST/JSON")
+  Rel(gateway, bacaan_svc, "Route to", "REST/JSON")
+  Rel(gateway, kuis_svc, "Route to", "REST/JSON")
+  Rel(gateway, forum_svc, "Route to", "REST/JSON")
+  
+  Rel(auth_svc, db_auth, "Read/Write", "TCP/IP")
+  Rel(bacaan_svc, db_bacaan, "Read/Write", "TCP/IP")
+  Rel(kuis_svc, db_kuis, "Read/Write", "TCP/IP")
+  Rel(forum_svc, db_forum, "Read/Write", "TCP/IP")
+```
+
 1. The current architecture of the group: Monolithic
 2. The future architecture of the group : Microservice
 3.  Explanation of risk storming of the group:
