@@ -128,3 +128,48 @@ Alasan memakai risk storming:
    Risk Storming membntu memahami trade-offs dari keputusan desain saat ini, sehingga
    memandu refctoring dan architectural improvements di masa depan.
 
+### 4. Individual Work - Rousan Chandra Syahbunan
+*(Saya mengerjakan modul Kuis dan Bacaan)*
+
+**Component Diagram (Kuis Service)**
+```mermaid
+C4Component
+  title Component Diagram - Kuis Service
+  
+  Container_Boundary(kuis_api, "Kuis Service Application") {
+      Component(controller, "Kuis Controller", "REST Controller", "Menerima request API untuk kuis")
+      Component(service, "Kuis Service", "Service Layer", "Logika bisnis penilaian dan pengambilan soal")
+      Component(repo, "Kuis Repository", "Data Access", "Mengelola query ke database")
+  }
+  ContainerDb(db_kuis, "Kuis DB", "PostgreSQL", "Menyimpan data soal dan nilai")
+  
+  Rel(controller, service, "Memanggil fungsi bisnis", "Java")
+  Rel(service, repo, "Meminta data", "Java")
+  Rel(repo, db_kuis, "Eksekusi Query", "JDBC")
+```
+
+**Code Diagram / Class Diagram (Kuis Service)**
+```mermaid
+classDiagram
+  class KuisController {
+    +getDaftarKuis()
+    +submitJawabanKuis(jawaban)
+  }
+  class KuisService {
+    +hitungNilai(jawaban)
+    +ambilSoalAcak()
+  }
+  class KuisRepository {
+    +findById(id)
+    +saveNilai(nilai)
+  }
+  class KuisModel {
+    -String id
+    -String judulKuis
+    -List soal
+  }
+  
+  KuisController --> KuisService : uses
+  KuisService --> KuisRepository : uses
+  KuisRepository --> KuisModel : manages
+```
